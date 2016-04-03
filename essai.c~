@@ -1,0 +1,66 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+typedef struct Variable Variable;
+struct Variable {
+	char * nom;
+	//enum type type;
+	int init; 
+	int portee;
+	int adr_memoire;
+	int constant; //si constante = 1 c'est une constante, on ne modifie pas la valeur 
+};
+
+typedef struct Element Element;
+struct Element
+{
+	Variable var;
+	Element *suivant ;
+};
+
+typedef struct Liste Liste;
+struct Liste
+{
+	Element *premier;
+	Element *dernier;
+	int nb_element;
+};
+
+
+Liste *liste_var = NULL;
+Liste *liste_var_temp = NULL;
+
+void initialisation(Liste *liste)
+{
+	liste = malloc(sizeof(Liste));
+	memset(liste, 0, sizeof(Liste));
+	liste->premier = malloc(sizeof(Element));
+}
+
+int main(){
+	Element *nouveau = malloc(sizeof(Element));
+	Variable *var = malloc(sizeof(Variable));
+	var->nom = "abc";
+	var->init = 0;
+	var->portee = 0;
+	var->constant = 0;
+/*llist ajouterEnTete(llist liste, int valeur)
+{
+
+    element* nouvelElement = malloc(sizeof(element));
+    nouvelElement->val = valeur;
+    nouvelElement->nxt = liste;
+    return nouvelElement;
+}
+*/
+	nouveau->var = *var;
+	liste_var = malloc(sizeof(Liste));
+	liste->premier = malloc(sizeof(Element));
+	liste_var->premier = nouveau;
+	printf("acces dernier\n");
+	liste_var->dernier = nouveau;
+	nouveau->var.adr_memoire = 0;
+	liste_var->nb_element = 1;
+	return 0;
+}
