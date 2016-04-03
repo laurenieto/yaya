@@ -31,17 +31,22 @@ struct Liste
 	int nb_element;
 };
 
+//initialisation
 void init_liste_var_temp();
-void init_liste_var(); 
-void insertion(Variable nvVar, int var_temp);
-void insertion_v(char *id, int portee, int constant);
+void init_liste_var();
+
+//insertion
 int insertion_v_tmp();
+void insertion_v(char *id, int portee, int constant);
+
+//suppression
+void suppression_tmp_var();
+void suppression_var(int portee);
+
+//getter/setter
 int get_address(char *nom, int portee);
-void suppr_tmp_var();
-void suppression_var(int supPortee);
+void init_var(char *nom, int portee);
 int est_constante(char *nom, int portee);
 int est_init(char *nom, int portee);
-void affichage_liste_var();
-void init_var(char *nom, int portee);
-void affichage_liste_var_temp();
+
 #endif
