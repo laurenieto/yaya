@@ -80,7 +80,7 @@ BlocAff : tID Affectation tPV {
 								}
 								int m = get_address($1,profondeur);
 								add_ins(0x5, m, $2, -1);
-								init_var($1, profondeur);
+								init_var($1, profondeur);							
 							};
 
 
@@ -116,7 +116,7 @@ Condition : Condition tAND Condition
 //			| tNOT Condition
 			| Expr {$$=$1;};
 
-BlocIf : 	tIF tPO Condition {add_ins(0x8, $3, -1, -1); $1 = ins_id - 1;}
+BlocIf : 	tIF tPO Condition { add_ins(0x8, $3, -1, -1); $1 = ins_id - 1;}
 	 		tPF {profondeur ++;} Body { ins[$1][2] = ins_id;	} BlocElsif;
 
 

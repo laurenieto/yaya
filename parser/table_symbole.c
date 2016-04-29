@@ -48,17 +48,17 @@ int insertion_v_tmp(){
 		nouveau->var.adr_memoire = (last_addr + 1);
 		liste_var_temp->nb_element++;
 	}
-	nouveau->suivant = NULL;	
+	nouveau->suivant = NULL;
 	return liste_var_temp->dernier->var.adr_memoire;
 }
 
-void insertion_v(char *id, int portee, int constant){ 
+void insertion_v(char *id, int portee, int constant){
 	Variable var;
 	var.nom = id;
 	var.init = 0;
 	var.portee = portee;
 	var.constant = constant;
-	
+
 	/* Création du nouvel élément */
 	Element *nouveau = malloc(sizeof(*nouveau));
 	nouveau->var = var;
@@ -74,13 +74,13 @@ void insertion_v(char *id, int portee, int constant){
 	else{
 		/* Verification que la variable n'est pas deja declarée */
 		Element *temp = liste_var->premier;
-		while(temp != NULL){ 
+		while(temp != NULL){
 			if(strcmp(temp->var.nom,var.nom)==0 && temp->var.portee == var.portee){
 				fprintf(stderr, "ERROR : insertion_v, variable deja dans la table\n");
 			    exit(-1);
 			}
 			temp = temp->suivant;
-		}		
+		}
 		/* Verification qu'il reste de la place en memoire */
 		if(liste_var->dernier->var.adr_memoire == TAILLEMAX+1){
 			fprintf(stderr, "ERROR : insertion_v, plus de place en memoire\n");
@@ -91,7 +91,7 @@ void insertion_v(char *id, int portee, int constant){
 		nouveau->var.adr_memoire = liste_var->nb_element;
 		liste_var->nb_element++;
 	}
-	nouveau->suivant = NULL;	
+	nouveau->suivant = NULL;
 }
 
 /*
@@ -127,8 +127,8 @@ void suppression_var(int portee){
 int get_address(char *nom, int portee){
 	Element *temp = liste_var->premier;
 	int flag = 0;
-	int addr; 
-	while(temp != NULL){ 
+	int addr;
+	while(temp != NULL){
 		if(strcmp(temp->var.nom,nom)==0 && temp->var.portee <= portee){
 			addr = temp->var.adr_memoire;
 			flag = 1;
@@ -144,62 +144,63 @@ int get_address(char *nom, int portee){
 
 void init_var(char *nom, int portee){
 	Element *temp = liste_var->premier;
+	Element *temp2 = liste_var->premier;
 	int count = 0;
-	while(temp != NULL){ 
+	while(temp != NULL){
 		if(strcmp(temp->var.nom,nom)==0 && temp->var.portee <= portee){
 			count++;
 		}
 		temp = temp->suivant;
-	}		
+	}
 	if(count == 0){
 		fprintf(stderr, "ERROR : init_var, variable n'est pas dans la table\n");
 	    exit(-1);
 	}
 	else{
 		//on parcours 2 fois la liste car on veut initialiser la derniere variable
-		while(temp != NULL && count!=0){ 
-			if(strcmp(temp->var.nom,nom)==0 && temp->var.portee <= portee){
+		while(temp2 != NULL && count!=0){
+			if(strcmp(temp2->var.nom,nom)==0 && temp2->var.portee <= portee){
 				count--;
-				if(count == 0){			
-					temp->var.init = 1;	
+				if(count == 0){
+					temp2->var.init = 1;
 				}
 			}
-			temp = temp->suivant;
+			temp2 = temp2->suivant;
 		}
 	}
 }
 
 int est_constante(char *nom, int portee){
-	// 1 constante 0 non 
+	// 1 constante 0 non
 	Element *temp = liste_var->premier;
 	int flag = 0;
 	int cons;
-	while(temp != NULL){ 
+	while(temp != NULL){
 		if(strcmp(temp->var.nom,nom)==0 && temp->var.portee <= portee){
 			cons = temp->var.constant;
 			flag = 1;
 		}
 		temp = temp->suivant;
-	}	
+	}
 	if(flag){
 		return cons;
-	}	
+	}
 	fprintf(stderr, "ERROR : est_constante, variable n'est pas dans la table\n");
     exit(-1);
 }
 
 int est_init(char *nom, int portee){
-	// 1 init 0 non 
+	// 1 init 0 non
 	Element *temp = liste_var->premier;
 	int init;
 	int flag = 0;
-	while(temp != NULL){ 
+	while(temp != NULL){
 		if(strcmp(temp->var.nom,nom)==0 && temp->var.portee <= portee){
 			init = temp->var.init;
 			flag = 1;
 		}
 		temp = temp->suivant;
-	}		
+	}
 	if(flag){
 		return init;
 	}
@@ -207,7 +208,6 @@ int est_init(char *nom, int portee){
     exit(-1);
 }
 
-/*
 void affichage_liste_var(){
 	Element *aux = liste_var->premier;
 	while(aux != NULL){
@@ -215,6 +215,10 @@ void affichage_liste_var(){
 				aux->var.nom, aux->var.init, aux->var.portee, aux->var.adr_memoire, aux->var.constant);
 		aux = aux->suivant;
 	}
+}
+
+/*
+
 }
 
 void affichage_liste_var_temp(){
@@ -227,9 +231,9 @@ void affichage_liste_var_temp(){
 
 
 int main(){
-	
+
 	init_var_temp();
-	init_var(); 
+	init_var();
 	printf("main \n");
 	Liste * liste;
 	printf("insertion_variable\n");
