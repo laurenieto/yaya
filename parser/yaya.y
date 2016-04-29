@@ -32,10 +32,10 @@
 %type <nb> Condition
 %type <nb> suiteDecl
 
-%token tPRINTF tMAIN tCST tINT tRET <str> tID <nb> tNB tPV tV tPO tPF tAO tAF tTEXT tG 
-%token tOU tET 
-%token tEG tPLUSPLUS tMOINSMOINS 
-%token <nb> tWHILE <nb> tIF 
+%token tPRINTF tMAIN tCST tINT tRET <str> tID <nb> tNB tPV tV tPO tPF tAO tAF tTEXT tG
+%token tOU tET
+%token tEG tPLUSPLUS tMOINSMOINS
+%token <nb> tWHILE <nb> tIF tELSIF tELSE
 %token tERROR
 
 %left  tNOT tAND tOR tINFEG tSUPEG tINF tSUP tEGEG tNOTEG
@@ -45,52 +45,52 @@
 %start Input
 
 %%
-Input : Fonction Input 
+Input : Fonction Input
 		|;
-	
-Fonction: tINT tID tPO {profondeur ++;} Params tPF Body 
+
+Fonction: tINT tID tPO {profondeur ++;} Params tPF Body
 		|tINT  tMAIN tPO {profondeur ++;} Params tPF Body;
 
 Appel_fn : tID tPO Params tPF tPV;
 
 Params : 	tINT tID SuiteParams {insertion_v($2,profondeur,0);}
 			|;
-		 
+
 SuiteParams : 	tV tINT tID SuiteParams {insertion_v($3,profondeur,0);}
 				|;
 
-Body : tAO Instrs tAF {	suppression_var(profondeur); 
+Body : tAO Instrs tAF {	suppression_var(profondeur);
 						profondeur --;};
 
 Instrs : 	BlocAff Instrs
 			|BlocDecl  Instrs
-			|BlocPrintf Instrs	
+			|BlocPrintf Instrs
 			|BlocIf Instrs
 			|BlocWhile Instrs
 			|Appel_fn Instrs
 			|tRET Expr tPV
 			|;
-			
+
 /*une constante ne peux être affectée que lors de sa déclaration*/
-//affectation retourne l'adresse de la variable , on ne peut pas affecter plsuieurs valeurs à la fois 
+//affectation retourne l'adresse de la variable , on ne peut pas affecter plsuieurs valeurs à la fois
 BlocAff : tID Affectation tPV {
 								if(est_constante($1,profondeur)){
 									fprintf(stderr, "ERROR : On ne peux pas affecter une constante\n");
 									exit(-1);
-								}	
+								}
 								int m = get_address($1,profondeur);
-								add_ins(0x5, m, $2, -1);	
-								init_var($1, profondeur);			
+								add_ins(0x5, m, $2, -1);
+								init_var($1, profondeur);
 							};
 
 
-Affectation : tEG Expr { $$ = $2;}; 
-					
-// 1 -> cste , 0 non 
-BlocDecl : 	tINT tID suiteDecl tPV { 	insertion_v($2,profondeur,0); 
+Affectation : tEG Expr { $$ = $2;};
+
+// 1 -> cste , 0 non
+BlocDecl : 	tINT tID suiteDecl tPV { 	insertion_v($2,profondeur,0);
 										if($3!=-1){
 											int m = get_address($2,profondeur);
-											add_ins(0x5, m, $3, -1);	
+											add_ins(0x5, m, $3, -1);
 											init_var($2, profondeur);
 										}
 									}
@@ -99,7 +99,7 @@ BlocDecl : 	tINT tID suiteDecl tPV { 	insertion_v($2,profondeur,0);
 suiteDecl :	Affectation{$$=$1;}
 			|tV tID suiteDecl { insertion_v($2,profondeur,0); $$=-1;}
 			|{$$=-1;};
-		
+
 
 Condition : Condition tAND Condition
 			| Condition tOR Condition {add_ins(0xD,$1,$1,$3); $$=$1;}
@@ -116,25 +116,39 @@ Condition : Condition tAND Condition
 //			| tNOT Condition
 			| Expr {$$=$1;};
 
-BlocIf : 	tIF tPO Condition {add_ins(0x8, $3, -1, -1); $1 = ins_id - 1;}															
-	 		tPF {profondeur ++;} Body { ins[$1][2] = ins_id;	};
+BlocIf : 	tIF tPO Condition {add_ins(0x8, $3, -1, -1); $1 = ins_id - 1;}
+	 		tPF {profondeur ++;} Body { ins[$1][2] = ins_id;	} BlocElsif;
+
+
+BlocElsif : tELSIF tPO Condition {add_ins(0x8, $3, -1, -1); $1 = ins_id - 1;}
+	 		tPF {profondeur ++;} Body { ins[$1][2] = ins_id;	} SuiteElsif
+			| BlocElse;
+
+
+SuiteElsif : tELSIF tPO Condition {add_ins(0x8, $3, -1, -1); $1 = ins_id - 1;}
+				 		tPF {profondeur ++;} Body { ins[$1][2] = ins_id;	} BlocElse
+			|BlocElse;
+
+
+BlocElse : tELSE {profondeur ++;} Body  {ins[$1][2] = ins_id;}
+				|;
 
 BlocWhile : tWHILE tPO Condition { add_ins(0x8, $3, -1 , -1); $1 = ins_id - 1; }
 			tPF {profondeur ++;} Body { add_ins(0x7,$1,-1,-1); //une fois la condition réalisée on jump au debut du while
-										ins[$1][2] = ins_id; // On modifie le num de l'instruction ou faire le saut si la condition est fausse 
-									  }; 
-		     
-  
+										ins[$1][2] = ins_id; // On modifie le num de l'instruction ou faire le saut si la condition est fausse
+									  };
+
+
 
 BlocPrintf : tPRINTF tPO Expr { add_ins(0xc,$3,-1,-1); } tPF tPV;
-								
+
 
 //$$ valeur retournée
 Expr: 	tNB { 	int n = insertion_v_tmp();
 		 		add_ins(0x6, n , $1, -1);
 				$$ = n;
 			 }
-				
+
 		| tID { int n = insertion_v_tmp(); //insertion retourne l'adresse de la v temporaire
 				int m = get_address($1,profondeur);
 				if(est_init($1,profondeur)){
@@ -146,7 +160,7 @@ Expr: 	tNB { 	int n = insertion_v_tmp();
 				    exit(-1);
 				}
 			  }
- 	
+
 		| Expr tPLUS Expr {	add_ins(0x1, $1, $1, $3);
 							$$ = $1;
 					 	  }
@@ -170,8 +184,8 @@ int yyerror(char *s) {
 int main(void) {
 	int i;
 	init_liste_var_temp();
-	init_liste_var();	
-    
+	init_liste_var();
+
 	yyparse();
 
 	char * str;
@@ -179,7 +193,7 @@ int main(void) {
 	char itos[15];
 
 	for (i=0; i<ins_id; i++){
-		switch(ins[i][0]){ 
+		switch(ins[i][0]){
 		case 1 :
 			strcat(str,"ADD ");
 			sprintf(itos, "%d", ins[i][1]);
@@ -303,15 +317,15 @@ int main(void) {
 			strcat(str,itos);
 			strcat(str,"\n");
 			break;
-		default : 
+		default :
 			fprintf(stderr, "ERROR : code assembleur inconnu\n");
 	   		exit(-1);
 		}
 	}
 
-    FILE* fichier = NULL; 
+    FILE* fichier = NULL;
     fichier = fopen("assembleur.txt", "w");
- 
+
     if (fichier != NULL)
     {
         fprintf(fichier, "%s", str);
@@ -324,7 +338,3 @@ int main(void) {
 
 	return 0;
 }
-
-
-	
-

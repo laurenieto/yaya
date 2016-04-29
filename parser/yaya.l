@@ -18,6 +18,8 @@ ID [a-z][_a-z0-9]*
 "const" return tCST;
 "printf" return tPRINTF;
 {BLANCS} {/*on ignore*/}
+"elsif" return tELSIF;
+"else" return tELSE;
 "int" return tINT;
 "return" return tRET;
 "while" return tWHILE;
@@ -25,7 +27,7 @@ ID [a-z][_a-z0-9]*
 {ID} {yylval.str=strdup(yytext); //faire un free, car strdup fait un malloc
 					return tID;
 				 }
-(-?){NB} {yylval.nb=atoi(yytext); 
+(-?){NB} {yylval.nb=atoi(yytext);
 					return tNB;
 				 }
 
@@ -57,5 +59,3 @@ ID [a-z][_a-z0-9]*
 
 .  {printf("tERROR token non reconnu\n");
    return tERROR; }
-
-
