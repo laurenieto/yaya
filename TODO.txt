@@ -1,7 +1,9 @@
 TODO  :
 
 else elsif -> ça marche 
-problème: quand on déclare une variable elle n'est pas connu dans la condition du if ...
+on peut pas faire int a = 4, b; (pas un problème juste expliquer qu'on a pas trouvé nécessaire de le faire) 
+
+lorsqu'une variable n'est pas init, erreur levée : variable non déclarée on peut peut-etre le découper en 2 erreurs
 
 Appel de fonction -> code pour les parametres 
 Recursivite
