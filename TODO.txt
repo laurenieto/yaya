@@ -1,5 +1,7 @@
 TODO  :
 
+blocFor: tFOR tPO tAFF tPV condition tPV ??
+
 else elsif -> ça marche 
 on peut pas faire int a = 4, b; (pas un problème juste expliquer qu'on a pas trouvé nécessaire de le faire) 
 
