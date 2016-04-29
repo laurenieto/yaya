@@ -1,6 +1,7 @@
 TODO  :
 
-else elsif 
+else elsif -> ça marche 
+problème: quand on déclare une variable elle n'est pas connu dans la condition du if ...
 
 Appel de fonction -> code pour les parametres 
 Recursivite
