@@ -35,7 +35,7 @@
 %type <nb> BlocElse
 
 %token tPRINTF tMAIN tCST tINT tRET <str> tID <nb> tNB tPV tV tPO tPF tAO tAF tTEXT tG
-%token tOU tET
+%token tOR tAND
 %token tEG tPLUSPLUS tMOINSMOINS
 %token <nb> tWHILE <nb> tIF tELSIF tELSE
 %token tERROR
@@ -103,16 +103,16 @@ suiteDecl :	Affectation{$$=$1;}
 			|{$$=-1;};
 
 
-Condition : Condition tAND Condition
-			| Condition tOR Condition {add_ins(0xD,$1,$1,$3); $$=$1;}
+Condition : Condition tAND Condition {add_ins(0xD,$1,$1,$3); $$=$1;}
+			| Condition tOR Condition {add_ins(0xE,$1,$1,$3); $$=$1;}
 			| Condition tINF Condition {add_ins(0x9,$1,$1,$3); $$=$1;}
 			| Condition tSUP Condition {add_ins(0xA,$1,$1,$3); $$=$1;}
 			| Condition tINFEG Condition {	int n = insertion_v_tmp(); add_ins(0x9,n,$1,$3);
 											int m = insertion_v_tmp(); add_ins(0xB,m,$1,$3);
-											add_ins(0xD,$1,n,m); $$=$1;}
+											add_ins(0xE,$1,n,m); $$=$1;}
 			| Condition tSUPEG Condition {	int n = insertion_v_tmp(); add_ins(0xA,n,$1,$3);
 											int m = insertion_v_tmp(); add_ins(0xB,m,$1,$3);
-											add_ins(0xD,$1,n,m); $$=$1;}
+											add_ins(0xE,$1,n,m); $$=$1;}
 			| Condition tEGEG Condition {add_ins(0xB,$1,$1,$3); $$=$1;}
 			| Condition tNOTEG Condition {add_ins(0xB,$1,$1,$3); $$=$1;}
 //			| tNOT Condition
@@ -312,6 +312,30 @@ int main(void) {
 		case 12 :
 			strcat(str,"PRI ");
 			sprintf(itos, "%d", ins[i][1]);
+			strcat(str,itos);
+			strcat(str,"\n");
+			break;
+		case 13 :
+			strcat(str,"AND ");
+			sprintf(itos, "%d", ins[i][1]);
+			strcat(str, itos);
+			strcat(str,"\n");
+			sprintf(itos, "%d", ins[i][2]);
+			strcat(str,itos);
+			strcat(str," ");
+			sprintf(itos, "%d", ins[i][3]);
+			strcat(str,itos);
+			strcat(str,"\n");
+			break;
+		case 14 :
+			strcat(str,"OR ");
+			sprintf(itos, "%d", ins[i][1]);
+			strcat(str, itos);
+			strcat(str,"\n");
+			sprintf(itos, "%d", ins[i][2]);
+			strcat(str,itos);
+			strcat(str," ");
+			sprintf(itos, "%d", ins[i][3]);
 			strcat(str,itos);
 			strcat(str,"\n");
 			break;

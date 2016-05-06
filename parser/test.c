@@ -1,8 +1,9 @@
 int main(){
-	int a = 18;
+	int a = 20;
 	int b = 20;
-	while(a<b){
+	if(a>b && a==b){
 		a = a+1;
 	}
+	printf(a);
 	int c = 4;
 }

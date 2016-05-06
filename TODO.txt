@@ -2,12 +2,8 @@ TODO  :
 
 blocFor: tFOR tPO tAFF tPV condition tPV ??
 
-or, and, <=, printf ne sont pas reconnu 
-
 on peut pas faire int a = 4, b; (pas un problème juste expliquer qu'on a pas trouvé nécessaire de le faire) 
 par contre quand on fait int a, b; -> les deux on la meme adresse !!!! 
-
-lorsqu'une variable n'est pas init, erreur levée : variable non déclarée on peut peut-etre le découper en 2 erreurs
 
 Appel de fonction -> code pour les parametres 
 Recursivite

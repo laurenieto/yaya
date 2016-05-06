@@ -12,14 +12,15 @@
         tADD tMUL tSOU tDIV
         tAFC tCOP tCOPB tCOPA
         tEQU tSUP tINF tAND tOR
-        tJMF tJMP tERROR
+        tJMF tJMP tERROR tPRI
 
 %start Instruction
 
 %%
-Instruction : Add Instruction | Mul Instruction | Sou Instruction | Div Instruction | 		      Inf Instruction | Sup Instruction | And Instruction | Or Instruction | 
-	      Equ Instruction | Afc Instruction | Cop Instruction | Jmf Instruction | 
-	      Jmp Instruction |;
+Instruction : 	Add Instruction | Mul Instruction | Sou Instruction | Div Instruction | 		      
+				Inf Instruction | Sup Instruction | And Instruction | Or Instruction | 
+		    	Equ Instruction | Afc Instruction | Cop Instruction | Jmf Instruction | 
+			    Jmp Instruction | Pri Instruction |;
 
 Add : tADD tNB tNB tNB {op operateur = ADD; add(operateur,$2,$3,$4);};
 
@@ -46,6 +47,8 @@ Cop : tCOP tNB tNB {op operateur = COP; add(operateur,$2,$3,0);};
 Jmf : tJMF tNB tNB {op operateur = JMF; add(operateur,$2,$3,0);};
 
 Jmp : tJMP tNB {op operateur = JMP; add(operateur,$2,0,0);};
+
+Pri : tPRI tNB {printf("d\n",$2)};
 
 %%
 

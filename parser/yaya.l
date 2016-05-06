@@ -45,8 +45,8 @@ ID [a-z][_a-z0-9]*
 "==" return tEGEG;
 "!=" return tNOTEG;
 
-"||" return tOU;
-"&&" return tET;
+"||" return tOR;
+"&&" return tAND;
 "!" return tNOT;
 
 "=" return tEG;
