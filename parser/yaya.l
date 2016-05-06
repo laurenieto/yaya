@@ -24,6 +24,7 @@ ID [a-z][_a-z0-9]*
 "return" return tRET;
 "while" return tWHILE;
 "if" return tIF;
+"for" return tFOR;
 {ID} {yylval.str=strdup(yytext); //faire un free, car strdup fait un malloc
 					return tID;
 				 }

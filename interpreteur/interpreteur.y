@@ -17,9 +17,9 @@
 %start Instruction
 
 %%
-Instruction : 	Add Instruction | Mul Instruction | Sou Instruction | Div Instruction | 		      
-				Inf Instruction | Sup Instruction | And Instruction | Or Instruction | 
-		    	Equ Instruction | Afc Instruction | Cop Instruction | Jmf Instruction | 
+Instruction : 	Add Instruction | Mul Instruction | Sou Instruction | Div Instruction |
+				Inf Instruction | Sup Instruction | And Instruction | Or Instruction |
+		    	Equ Instruction | Afc Instruction | Cop Instruction | Jmf Instruction |
 			    Jmp Instruction | Pri Instruction |;
 
 Add : tADD tNB tNB tNB {op operateur = ADD; add(operateur,$2,$3,$4);};
@@ -48,7 +48,7 @@ Jmf : tJMF tNB tNB {op operateur = JMF; add(operateur,$2,$3,0);};
 
 Jmp : tJMP tNB {op operateur = JMP; add(operateur,$2,0,0);};
 
-Pri : tPRI tNB {printf("d\n",$2)};
+Pri : tPRI tNB {printf("d\n",$2);};
 
 %%
 
@@ -63,5 +63,3 @@ int main(void){
 	affiche_tab();
 	return 0;
 }
-
-

@@ -1,9 +1,7 @@
 int main(){
-	int a = 20;
-	int b = 20;
-	if(a>b && a==b){
-		a = a+1;
+	int a;
+	int b = 0;
+	for(a=1; a > 3 ; a = a+1){
+
 	}
-	printf(a);
-	int c = 4;
 }
