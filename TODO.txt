@@ -2,8 +2,10 @@ TODO  :
 
 blocFor: tFOR tPO tAFF tPV condition tPV ??
 
-else elsif -> ça marche 
+or, and, <=, printf ne sont pas reconnu 
+
 on peut pas faire int a = 4, b; (pas un problème juste expliquer qu'on a pas trouvé nécessaire de le faire) 
+par contre quand on fait int a, b; -> les deux on la meme adresse !!!! 
 
 lorsqu'une variable n'est pas init, erreur levée : variable non déclarée on peut peut-etre le découper en 2 erreurs
 
@@ -13,6 +15,4 @@ Pointeur
 Tableau
 | tNOT Condition -> trouver une solution
 
-J'ai pas compris l'histoire de tERROR
-j'ai ajouté AND et OR dans les codes assembleurs, en leur donnant comme valeur D et E respectivement, mais je suis pas sure que ça soit ça
 

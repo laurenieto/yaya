@@ -1,13 +1,8 @@
 int main(){
-	int a = 3;
-  a = 4;
-	if (a < 7){
-		a = 6;
+	int a = 18;
+	int b = 20;
+	while(a<b){
+		a = a+1;
 	}
-	elsif(4 < 7){
-		a= 7;
-	}
-	else{
-		a= 4;
-	}
+	int c = 4;
 }

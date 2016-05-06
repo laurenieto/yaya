@@ -25,13 +25,13 @@ interpreteur :
 	mv interpreteur.output interpreteur/interpreteur.output
 	gcc -c interpreteur/interpreteur.l.c -o interpreteur/interpreteur.l.o
 	gcc -c interpreteur/interpreteur.y.c -o interpreteur/interpreteur.y.o
-	gcc -o interpreteur/interpreteur interpreteur/interpreteur.l.o interpreteur/interpreteur.y.o -ll -lm
+	gcc -o interpreteur/interpreteur interpreteur/interpreteur.l.o interpreteur/memoire.c interpreteur/interpreteur.y.o -ll -lm
 
 testParser:parser
 	./parser/yaya < parser/test.c
 
-testInterpreteur:interpreteur
-	./interpreteur/interpreteur < parser/assembleur.txt
+testInterpreteur:interpreteur testParser
+	./interpreteur/interpreteur < assembleur.txt > fic.txt
 
 clean:
 	rm parser/yaya.h parser/yaya.l.c parser/yaya.y.c parser/*.o parser/yaya.output

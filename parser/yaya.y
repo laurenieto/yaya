@@ -31,6 +31,8 @@
 %type <nb> Affectation
 %type <nb> Condition
 %type <nb> suiteDecl
+%type <nb> BlocElsif
+%type <nb> BlocElse
 
 %token tPRINTF tMAIN tCST tINT tRET <str> tID <nb> tNB tPV tV tPO tPF tAO tAF tTEXT tG
 %token tOU tET
@@ -117,24 +119,20 @@ Condition : Condition tAND Condition
 			| Expr {$$=$1;};
 
 BlocIf : 	tIF tPO Condition { add_ins(0x8, $3, -1, -1); $1 = ins_id - 1;}
-	 		tPF {profondeur ++;} Body { ins[$1][2] = ins_id;	} BlocElsif;
+	 		tPF {profondeur ++;} Body {ins[$1][2] = ins_id+1;add_ins(0x7, ins_id, -1, -1); $2 = ins_id - 1;} 
+			BlocElsif {ins[$2][1] = $9;};
 
 
-BlocElsif : tELSIF tPO Condition {add_ins(0x8, $3, -1, -1); $1 = ins_id - 1;}
-	 		tPF {profondeur ++;} Body { ins[$1][2] = ins_id;	} SuiteElsif
-			| BlocElse;
+BlocElsif : tELSIF tPO Condition { add_ins(0x8, $3, -1, -1); $1 = ins_id - 1;}
+	 		tPF {profondeur ++;} Body { ins[$1][2] = ins_id+1; add_ins(0x7, ins_id, -1, -1); $2 = ins_id - 1;} 
+			BlocElsif {ins[$2][1] = $9; $$=$9;}
+			| BlocElse {$$=$1;};
 
+BlocElse : tELSE {profondeur ++;} Body  {ins[$1][2] = ins_id; $$ = ins_id;} 
+				|{$$=ins_id;};
 
-SuiteElsif : tELSIF tPO Condition {add_ins(0x8, $3, -1, -1); $1 = ins_id - 1;}
-				 		tPF {profondeur ++;} Body { ins[$1][2] = ins_id;	} BlocElse
-			|BlocElse;
-
-
-BlocElse : tELSE {profondeur ++;} Body  {ins[$1][2] = ins_id;}
-				|;
-
-BlocWhile : tWHILE tPO Condition { add_ins(0x8, $3, -1 , -1); $1 = ins_id - 1; }
-			tPF {profondeur ++;} Body { add_ins(0x7,$1,-1,-1); //une fois la condition réalisée on jump au debut du while
+BlocWhile : tWHILE tPO {$2 = ins_id;} Condition { add_ins(0x8, $4, -1 , -1); $1 = ins_id - 1; }
+			tPF {profondeur ++;} Body { add_ins(0x7,$2,-1,-1); //une fois la condition réalisée on jump au debut du while
 										ins[$1][2] = ins_id; // On modifie le num de l'instruction ou faire le saut si la condition est fausse
 									  };
 
