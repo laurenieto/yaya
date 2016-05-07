@@ -33,6 +33,7 @@
 %type <nb> suiteDecl
 %type <nb> BlocElsif
 %type <nb> BlocElse
+%type <nb> Incrementation
 
 %token tPRINTF tMAIN tCST tINT tRET <str> tID <nb> tNB tPV tV tPO tPF tAO tAF tTEXT tG
 %token tOR tAND
@@ -48,6 +49,23 @@
 %start Input
 
 %%
+/*
+PLUS -> 1
+FOIS -> 2
+MOINS -> 3
+DIV -> 4 
+COP -> 5
+AFC -> 6
+JMP -> 7
+JMF -> 8
+INF -> 9
+SUP -> A
+EGEG -> B
+PRI -> C
+AND -> D
+OR -> E
+*/
+
 Input : Fonction Input
 		|;
 
@@ -71,7 +89,7 @@ Instrs : 	BlocAff Instrs
 			|BlocIf Instrs
 			|BlocWhile Instrs
 			|BlocFor Instrs
-			/*|Incrementation tPV Instrs */
+			|Incrementation tPV Instrs
 			|Appel_fn Instrs
 			|tRET Expr tPV
 			|;
@@ -86,37 +104,45 @@ BlocAff : tID Affectation tPV {
 								int m = get_address($1,profondeur);
 								add_ins(0x5, m, $2, -1);
 								init_var($1, profondeur);
-							}
+							};
 
 Affectation : tEG Expr { $$ = $2;};
 
-/*
-Incrementation : tID tPLUSPLUS { if(est_constante($1,profondeur)){
-														fprintf(stderr, "ERROR : On ne peux pas affecter une constante\n");
-														exit(-1);
-													if (est_init($1, profondeur) == 0){
-													fprintf(stderr, "ERROR : On ne peux pas incrémenter/décrémenter une variable non initialisée\n");
-													exit(-1);
-													}
-											}
-												int m = get_address($1,profondeur);
-												int v = get_valeur($1,profondeur);
-												add_ins(0x5, m, v+1, -1);
-												}
 
-								| tID tMOINSMOINS { if(est_constante($1,profondeur)){
-																						fprintf(stderr, "ERROR : On ne peux pas affecter une constante\n");
-																						exit(-1);
-																					if (est_init($1, profondeur)== 0){
-																					fprintf(stderr, "ERROR : On ne peux pas incrémenter/décrémenter une variable non initialisée\n");
-																					exit(-1);
-																					}
-																	}
-																				int m = get_address($1,profondeur);
-																				int v = get_valeur($1,profondeur);
-																				add_ins(0x5, m, v-1, -1);
-																				};
-*/
+Incrementation : tID tPLUSPLUS {
+									if(est_constante($1,profondeur)){
+										fprintf(stderr, "ERROR : On ne peux pas affecter une constante\n");
+										exit(-1);
+									}
+									if (est_init($1, profondeur) == 0){
+										fprintf(stderr, "ERROR : On ne peux pas incrémenter/décrémenter une variable non initialisée\n");
+										exit(-1);
+									}
+									int m = get_address($1,profondeur);
+									//on crée une variable temporaire, a laquelle on affecte 1
+									int n = insertion_v_tmp();
+									add_ins(0x6, n, 1, -1);
+									add_ins(0x1, m, m, n);
+									$$ = m;
+								}
+
+				| tID tMOINSMOINS { 
+									if(est_constante($1,profondeur)){
+										fprintf(stderr, "ERROR : On ne peux pas affecter une constante\n");
+										exit(-1);
+									}
+									if (est_init($1, profondeur)== 0){
+										fprintf(stderr, "ERROR : On ne peux pas incrémenter/décrémenter une variable non initialisée\n");
+										exit(-1);
+									}
+									int m = get_address($1,profondeur);
+									//on crée une variable temporaire, a laquelle on affecte 1
+									int n = insertion_v_tmp();
+									add_ins(0x6, n, 1, -1);
+									add_ins(0x3, m, m, n);	
+									$$ = m;											
+									};
+
 
 // 1 -> cste , 0 non
 BlocDecl : 	tINT tID suiteDecl tPV { 	insertion_v($2,profondeur,0);
@@ -131,7 +157,6 @@ BlocDecl : 	tINT tID suiteDecl tPV { 	insertion_v($2,profondeur,0);
 suiteDecl :	Affectation{$$=$1;}
 			|tV tID suiteDecl { insertion_v($2,profondeur,0); $$=-1;}
 			|{$$=-1;};
-
 
 Condition : Condition tAND Condition {add_ins(0xD,$1,$1,$3); $$=$1;}
 			| Condition tOR Condition {add_ins(0xE,$1,$1,$3); $$=$1;}
@@ -169,18 +194,9 @@ BlocWhile : tWHILE tPO {$2 = ins_id;} Condition { add_ins(0x8, $4, -1 , -1); $1 
 /*pas de ; après blocaff car déjà compris dans blocAff*/
 BlocFor: tFOR tPO BlocAff {$2 = ins_id;}
 				Condition {add_ins(0x8, $5, -1 , -1); $1 = ins_id - 1;}
- 				tPV condFor tPF {profondeur ++;} Body {add_ins(0x7, $2,-1,-1);
+ 				tPV Incrementation tPF {profondeur ++;} Body {add_ins(0x7, $2,-1,-1);
 																						ins[$1][2] = ins_id;
 																									};
-
-condFor: tID Affectation {if(est_constante($1,profondeur)){
-									fprintf(stderr, "ERROR : On ne peux pas affecter une constante\n");
-									exit(-1);
-								}
-								int m = get_address($1,profondeur);
-								add_ins(0x5, m, $2, -1);
-								init_var($1, profondeur);
-							};
 
 BlocPrintf : tPRINTF tPO Expr { add_ins(0xc,$3,-1,-1); } tPF tPV;
 
@@ -215,6 +231,7 @@ Expr: 	tNB { 	int n = insertion_v_tmp();
 		|Expr tDIV Expr {	add_ins(0x4, $1, $1, $3);
 							$$ = $1;
 						}
+		|Incrementation { $$=$1;}
 		|tPO Expr tPF {$$ = $2;} ;
 
 

@@ -4,7 +4,7 @@
 #define TAILLEMAX 10000
 
 typedef enum {
-	ADD, MUL, SOU, DIV, INF, SUP, AND, OR, EQU, AFC, COP, JMF, JMP
+	ADD, MUL, SOU, DIV, COP, AFC, JMP, JMF, INF, SUP, EQU, PRI, AND, OR
 }op;
 
 void add(op operateur, int adresse, int val1, int val2);

@@ -1,9 +1,6 @@
 TODO  :
 
-blocFor: tFOR tPO tAFF tPV condition tPV ??
-
 on peut pas faire int a = 4, b; (pas un problème juste expliquer qu'on a pas trouvé nécessaire de le faire) 
-par contre quand on fait int a, b; -> les deux on la meme adresse !!!! 
 
 Appel de fonction -> code pour les parametres 
 Recursivite
