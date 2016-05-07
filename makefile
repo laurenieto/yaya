@@ -13,7 +13,7 @@ parser :
 	mv yaya.output parser/yaya.output
 	gcc -c parser/yaya.l.c -o parser/yaya.l.o
 	gcc -c parser/yaya.y.c -o parser/yaya.y.o
-	gcc -o parser/yaya parser/yaya.l.o parser/table_symbole.c parser/yaya.y.o -ll -lm
+	gcc -o parser/yaya parser/yaya.l.o parser/table_symbole.c parser/gestion_fonction.c parser/yaya.y.o -ll -lm
 
 interpreteur : 
 	#interpreteur	

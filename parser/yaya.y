@@ -2,6 +2,7 @@
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include "table_symbole.h"
+	#include "gestion_fonction.h"
 
 	int yerror();
 
@@ -67,12 +68,13 @@ OR -> E
 */
 
 Input : Fonction Input
-		|;
+		|Main;
 
-Fonction: tINT tID tPO {profondeur ++;} Params tPF Body
-		|tINT  tMAIN tPO {profondeur ++;} Params tPF Body;
+Fonction: tINT tID tPO {profondeur ++; insertion_fun($2, ins_id);} Params tPF Body 
+			{add_ins(0x7, -1, -1, -1); set_addr_return($2, ins_id-1);};
+Main : tINT  tMAIN tPO {profondeur ++; insertion_fun("main", ins_id);} Params tPF Body;
 
-Appel_fn : tID tPO Params tPF tPV;
+Appel_fn : tID tPO Params tPF tPV {int m = get_addr_fun($1); add_ins(0x7, m, -1, -1); int n = get_addr_return($2); ins[n][1] = ins_id;};
 
 Params : 	tINT tID SuiteParams {insertion_v($2,profondeur,0);}
 			|;
@@ -245,6 +247,7 @@ int main(void) {
 	int i;
 	init_liste_var_temp();
 	init_liste_var();
+	init_liste_fun();
 
 	yyparse();
 
@@ -419,6 +422,6 @@ int main(void) {
 		fprintf(stderr, "ERROR : fichier n'existe pas\n");
 	    exit(-1);
 	}
-
+	affichage_liste_fun();
 	return 0;
 }

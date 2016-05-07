@@ -93,7 +93,9 @@ void add(op operateur, int adresse, int val1, int val2){
 
 
 void operation(){
-	for(i_inst = 0; i_inst<i_op; i_inst++){
+	//numéro de l'instruction qui contient le main pour qu'on puisse commencer par la
+	int inst_main = 0;
+	for(i_inst = inst_main; i_inst<i_op; i_inst++){
 		printf("\n%d -> %d, %d, %d, %d\n", i_inst, op_tab[i_inst][0], op_tab[i_inst][1], op_tab[i_inst][2], op_tab[i_inst][3]);
 		switch (op_tab[i_inst][0]) {
 		case ADD :

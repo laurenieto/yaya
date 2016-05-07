@@ -21,6 +21,8 @@ void init_liste_var(){
 	liste_var->premier = NULL;
 }
 
+
+
 int insertion_v_tmp(){
 	Variable var;
 	var.nom = "tmp";
@@ -94,6 +96,7 @@ void insertion_v(char *id, int portee, int constant){
 	nouveau->suivant = NULL;
 }
 
+
 /*
 void suppression_tmp_var(){
 	Element *aux = liste_var_temp->premier;
@@ -142,29 +145,6 @@ int get_address(char *nom, int portee){
     exit(-1);
 }
 
-/*retourne la valeur de la constante initialisée à l'aide de l'id et de l'adresse*/
-//pb : comment accéder à la valeur qui se trouve dans la mémoire ?
-/*
-int get_valeur(char *id, int portee){
-	int valeur;
-	int flag=0;
-	Element *temp = liste_var->premier;*
-	while(temp != NULL){
-		if(strcmp(temp->var.nom,nom)==0 && temp->var.portee <= portee && temp->var.init == 1){
-			valeur =
-			flag = 1;
-		}
-		temp = temp->suivant;
-		if (flag){
-			return valeur;
-		}
-		fprintf(stderr, "ERROR : get_valeur, variable initialisée n'est pas dans la table\n");
-	    exit(-1);
-	}
-
-	}
-}
-*/
 
 void init_var(char *nom, int portee){
 	Element *temp = liste_var->premier;
@@ -240,6 +220,7 @@ void affichage_liste_var(){
 		aux = aux->suivant;
 	}
 }
+
 
 /*
 

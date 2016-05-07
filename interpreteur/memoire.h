@@ -1,5 +1,9 @@
+#ifndef MEMOIRE
+#define MEMOIRE
+
 #include <stdlib.h>
 #include <stdio.h>
+
 
 #define TAILLEMAX 10000
 
@@ -25,3 +29,5 @@ void affectation(int add, int a);
 void copie(int a, int b);
 void jmf(int a, int b);
 void jump(int a);
+
+#endif

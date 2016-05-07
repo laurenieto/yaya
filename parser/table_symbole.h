@@ -1,5 +1,5 @@
 #ifndef TABLE_SYMBOLE
-#define TABLE_SYMBOLES
+#define TABLE_SYMBOLE
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -31,6 +31,8 @@ struct Liste
 	int nb_element;
 };
 
+
+
 //initialisation
 void init_liste_var_temp();
 void init_liste_var();
@@ -48,5 +50,4 @@ int get_address(char *nom, int portee);
 void init_var(char *nom, int portee);
 int est_constante(char *nom, int portee);
 int est_init(char *nom, int portee);
-
 #endif
