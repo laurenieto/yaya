@@ -54,7 +54,7 @@
 PLUS -> 1
 FOIS -> 2
 MOINS -> 3
-DIV -> 4 
+DIV -> 4
 COP -> 5
 AFC -> 6
 JMP -> 7
@@ -70,19 +70,23 @@ OR -> E
 Input : Fonction Input
 		|Main;
 
-Fonction: tINT tID tPO {profondeur ++; insertion_fun($2, ins_id);} Params tPF Body 
+Fonction: tINT tID tPO {profondeur ++; insertion_fun($2, ins_id); insertion_v((char *)"_",profondeur,0);} Params tPF BodyFunction
 			{add_ins(0x7, -1, -1, -1); set_addr_return($2, ins_id-1);};
 Main : tINT  tMAIN tPO {profondeur ++; insertion_fun("main", ins_id);} Params tPF Body;
 
 Appel_fn : tID tPO Params tPF tPV {int m = get_addr_fun($1); add_ins(0x7, m, -1, -1); int n = get_addr_return($2); ins[n][1] = ins_id;};
 
-Params : 	tINT tID SuiteParams {insertion_v($2,profondeur,0);}
+Params : 	tINT tID SuiteParams {insertion_v($2,profondeur,0); affichage_liste_var();}
 			|;
 
 SuiteParams : 	tV tINT tID SuiteParams {insertion_v($3,profondeur,0);}
 				|;
 
 Body : tAO Instrs tAF {	suppression_var(profondeur);
+						profondeur --;};
+
+/*nécessaire pour ne pas supprimer les variables de la meme profondeur qui ne doivent aps être supprimées*/
+BodyFunction : tAO Instrs tAF { suppression_var_fn();
 						profondeur --;};
 
 Instrs : 	BlocAff Instrs
@@ -128,7 +132,7 @@ Incrementation : tID tPLUSPLUS {
 									$$ = m;
 								}
 
-				| tID tMOINSMOINS { 
+				| tID tMOINSMOINS {
 									if(est_constante($1,profondeur)){
 										fprintf(stderr, "ERROR : On ne peux pas affecter une constante\n");
 										exit(-1);
@@ -141,8 +145,8 @@ Incrementation : tID tPLUSPLUS {
 									//on crée une variable temporaire, a laquelle on affecte 1
 									int n = insertion_v_tmp();
 									add_ins(0x6, n, 1, -1);
-									add_ins(0x3, m, m, n);	
-									$$ = m;											
+									add_ins(0x3, m, m, n);
+									$$ = m;
 									};
 
 
@@ -256,8 +260,8 @@ int main(void) {
 	char itos[15];
 	//on ajoute le numero de l'instruction du main
 	int val_return = get_addr_fun("main");
-	sprintf(itos, "%d", val_return);	
-	strcat(str,"main ");	
+	sprintf(itos, "%d", val_return);
+	strcat(str,"main ");
 	strcat(str,itos);
 	strcat(str,"\n");
 

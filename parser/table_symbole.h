@@ -10,10 +10,10 @@ typedef struct Variable Variable;
 struct Variable {
 	char * nom;
 	//enum type type;
-	int init; 
+	int init;
 	int portee;
 	int adr_memoire;
-	int constant; //si constante = 1 c'est une constante, on ne modifie pas la valeur 
+	int constant; //si constante = 1 c'est une constante, on ne modifie pas la valeur
 };
 
 typedef struct Element Element;
@@ -44,6 +44,7 @@ void insertion_v(char *id, int portee, int constant);
 //suppression
 void suppression_tmp_var();
 void suppression_var(int portee);
+void suppression_var_fn();
 
 //getter/setter
 int get_address(char *nom, int portee);

@@ -126,6 +126,26 @@ void suppression_var(int portee){
 		liste_var->nb_element = aux->var.adr_memoire+1;
 	}
 }
+/*lorsqu'on déclare une fonction, on ajoute à la table des symboles l'élément _ ,
+on considère qu'une variable ne peut pas s'appeler _ (sont nom doit obligatoirement commencer par une minuscule).
+Ainsi, on ne supprime que les variables relatives à a fonction déclarée
+On ne gere pas les fonction imbriquées, il faudrait parcourir la liste depuis le dernier*/
+void suppression_var_fn(){
+	Element *temp = liste_var->premier;
+	Element *aux = liste_var->premier;
+	if(aux->var.nom="_"){
+		liste_var->premier = NULL;
+		liste_var->dernier = NULL;
+	}
+	else{
+		while(aux->suivant!=NULL && aux->suivant->var.nom != (char *)"_"){
+			aux = aux->suivant;
+		}
+		aux->suivant=NULL;
+		liste_var->dernier = aux;
+		liste_var->nb_element = aux->var.adr_memoire+1;
+	}
+}
 
 int get_address(char *nom, int portee){
 	Element *temp = liste_var->premier;
@@ -144,6 +164,7 @@ int get_address(char *nom, int portee){
 	fprintf(stderr, "ERROR : get_addresse, variable n'est pas dans la table\n");
     exit(-1);
 }
+
 
 
 void init_var(char *nom, int portee){
