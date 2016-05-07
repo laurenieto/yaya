@@ -13,7 +13,7 @@ typedef enum {
 
 void add(op operateur, int adresse, int val1, int val2);
 void affiche_tab();
-void operation();
+void operation(int inst_main);
 void affiche_memo();
 
 void addition(int add, int a, int b);

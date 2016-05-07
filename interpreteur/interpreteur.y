@@ -5,6 +5,8 @@
 
 	int yyeror();
 
+	int val_main = 0;
+
 %}
 %union {int nb;}
 
@@ -12,11 +14,13 @@
         tADD tMUL tSOU tDIV
         tAFC tCOP tCOPB tCOPA
         tEQU tSUP tINF tAND tOR
-        tJMF tJMP tERROR tPRI
+        tJMF tJMP tERROR tPRI tMAIN
 
-%start Instruction
+%start Input
 
 %%
+Input : Main Instruction;
+
 Instruction : 	Add Instruction | Mul Instruction | Sou Instruction | Div Instruction |
 				Inf Instruction | Sup Instruction | And Instruction | Or Instruction |
 		    	Equ Instruction | Afc Instruction | Cop Instruction | Jmf Instruction |
@@ -50,6 +54,8 @@ Jmp : tJMP tNB {op operateur = JMP; add(operateur,$2,0,0);};
 
 Pri : tPRI tNB {printf("d\n",$2);};
 
+Main : tMAIN tNB {val_main = $2;};
+
 %%
 
 int yyerror(char *s) {
@@ -59,7 +65,7 @@ int yyerror(char *s) {
 
 int main(void){
 	yyparse();
-	operation();
+	operation(val_main);
 	affiche_tab();
 	return 0;
 }

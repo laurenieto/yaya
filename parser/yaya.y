@@ -254,6 +254,12 @@ int main(void) {
 	char * str;
 	str = (char *) malloc( ins_id*512*sizeof(char) );
 	char itos[15];
+	//on ajoute le numero de l'instruction du main
+	int val_return = get_addr_fun("main");
+	sprintf(itos, "%d", val_return);	
+	strcat(str,"main ");	
+	strcat(str,itos);
+	strcat(str,"\n");
 
 	for (i=0; i<ins_id; i++){
 		switch(ins[i][0]){

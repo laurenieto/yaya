@@ -27,6 +27,7 @@ NB [0-9]+
 "JMF" {return tJMF;}
 "JMP" {return tJMP;}
 "PRI" {return tPRI;}
+"main" {return tMAIN;}
 
 .  {printf("tERROR token non reconnu\n");
    return tERROR; }
