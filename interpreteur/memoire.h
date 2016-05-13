@@ -8,7 +8,7 @@
 #define TAILLEMAX 10000
 
 typedef enum {
-	ADD, MUL, SOU, DIV, COP, AFC, JMP, JMF, INF, SUP, EQU, PRI, AND, OR
+	ADD, MUL, SOU, DIV, COP, AFC, JMP, JMF, INF, SUP, EQU, PRI, AND, OR, COPA, COPB
 }op;
 
 void add(op operateur, int adresse, int val1, int val2);
@@ -27,6 +27,8 @@ void ou(int add, int a, int b);
 void egal(int add, int a, int b);
 void affectation(int add, int a);
 void copie(int a, int b);
+void copa(int a , int b);
+void copb(int a , int b);
 void jmf(int a, int b);
 void jump(int a);
 

@@ -1,16 +1,8 @@
-int fun1(){
-	int b = 10;	
-}
-
-int fun2(){
-	int c = 20;
-}
-
 int main(){
-	int a = 5;
-	fun1();
-	int d = 15;
-	fun2();
-	int e = 25; 
-}
+  int * c = 1;
+  int b = 3;
+  int a = 4;
+  printf(a);
+  printf(b);
 
+}

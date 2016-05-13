@@ -7,10 +7,10 @@
 BLANCS [ \t]+
 NB [0-9]+
 
-%% 
+%%
 
 {BLANCS} {/*on ignore*/}
-(-?){NB} { yylval.nb=atoi(yytext); 
+(-?){NB} { yylval.nb=atoi(yytext);
 	   return tNB;
 	 }
 "ADD" {return tADD;}
@@ -23,6 +23,8 @@ NB [0-9]+
 "OR" {return tOR;}
 "EQU" {return tEQU;}
 "AFC" {return tAFC;}
+"COPA" {return tCOPA;}
+"COPB" {return tCOPB;}
 "COP" {return tCOP;}
 "JMF" {return tJMF;}
 "JMP" {return tJMP;}
@@ -31,4 +33,3 @@ NB [0-9]+
 
 .  {printf("tERROR token non reconnu\n");
    return tERROR; }
-

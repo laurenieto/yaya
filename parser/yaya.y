@@ -4,6 +4,11 @@
 	#include "table_symbole.h"
 	#include "gestion_fonction.h"
 
+
+
+
+
+//TODOOOOOOOOOOOOOOOO LIGNE 246
 	int yerror();
 
 	int ins[255][4];
@@ -65,6 +70,8 @@ EGEG -> B
 PRI -> C
 AND -> D
 OR -> E
+COPA -> F
+COPB -> 10
 */
 
 Input : Fonction Input
@@ -111,6 +118,12 @@ BlocAff : tID Affectation tPV {
 								add_ins(0x5, m, $2, -1);
 								init_var($1, profondeur);
 							};
+
+						| tFOIS tID Affectation tPV {
+														int m = get_address($2,profondeur);
+														add_ins(0x10, m, $3, -1);
+														init_var($2, profondeur);
+													};
 
 Affectation : tEG Expr { $$ = $2;};
 
@@ -159,6 +172,13 @@ BlocDecl : 	tINT tID suiteDecl tPV { 	insertion_v($2,profondeur,0);
 										}
 									}
 			|tCST tINT tID suiteDecl tPV { insertion_v($3,profondeur,1); };
+			|tINT tFOIS tID suiteDecl tPV { 	insertion_v($3,profondeur,0);
+													if($4!=-1){
+														int m = get_address($3,profondeur);
+														add_ins(0x10, m, $4, -1);
+														init_var($3, profondeur);
+													}
+												};
 
 suiteDecl :	Affectation{$$=$1;}
 			|tV tID suiteDecl { insertion_v($2,profondeur,0); $$=-1;}
@@ -224,6 +244,18 @@ Expr: 	tNB { 	int n = insertion_v_tmp();
 				    exit(-1);
 				}
 			  }
+		| tFOIS tID { int n = insertion_v_tmp(); //insertion retourne l'adresse de la v temporaire
+				int m = get_address($2,profondeur);
+				if(est_init($2,profondeur)){
+					add_ins(0xF, n , m, -1);
+		 			$$ = n;
+				}
+				else{
+					fprintf(stderr, "ERROR : variable n'est pas declaree\n");
+				    exit(-1);
+				}
+			  }
+
 
 		| Expr tPLUS Expr {	add_ins(0x1, $1, $1, $3);
 							$$ = $1;
@@ -244,7 +276,7 @@ Expr: 	tNB { 	int n = insertion_v_tmp();
 %%
 
 int yyerror(char *s) {
-  printf("erreur yacc : %s\n",s);
+  printf("erreur yacc parser: %s\n",s);
 }
 
 int main(void) {
@@ -414,6 +446,30 @@ int main(void) {
 			strcat(str,itos);
 			strcat(str,"\n");
 			break;
+		case 15 :
+				strcat(str,"COPA ");
+				sprintf(itos, "%d", ins[i][1]);
+				strcat(str, itos);
+				strcat(str,"\n");
+				sprintf(itos, "%d", ins[i][2]);
+				strcat(str,itos);
+				strcat(str," ");
+				sprintf(itos, "%d", ins[i][3]);
+				strcat(str,itos);
+				strcat(str,"\n");
+				break;
+			case 16 :
+						strcat(str,"COPB ");
+						sprintf(itos, "%d", ins[i][1]);
+						strcat(str, itos);
+						strcat(str,"\n");
+						sprintf(itos, "%d", ins[i][2]);
+						strcat(str,itos);
+						strcat(str," ");
+						sprintf(itos, "%d", ins[i][3]);
+						strcat(str,itos);
+						strcat(str,"\n");
+						break;
 		default :
 			fprintf(stderr, "ERROR : code assembleur inconnu\n");
 	   		exit(-1);

@@ -1,6 +1,6 @@
 #include "memoire.h"
 
-int memory [TAILLEMAX];
+int memory [TAILLEMAX]; /* adresse : numéro case, valeur : tab[num_case]*/
 int op_tab [TAILLEMAX][4];
 int i_inst = 0, i_op = 0;
 
@@ -73,6 +73,32 @@ void copie(int a, int b){
 	memory[a] = memory[b];
 }
 
+
+/* COPA 1 2 : on prend la valeur qu'il y a à l'adresse 2 (val_add_2),
+ on regarde la valeur qu'il y a à l'adresse val_add_2 (val_add_val_add2)
+ et on la met à l'adresse 1
+   */
+void copa(int a , int b){
+	int v = memory[b];
+	int w  = memory[v];
+	memory[a] = w;
+}
+
+/*COPB 1 2 on copie la valeur qu'il y a à l'adresse 2 à l'adresse contenue dans @1
+@2 = 7
+@1 = 5           -----> @5 = 7
+
+
+ex : on veut affecter (*a) = 3 : COPB ad_a ad_3
+											-> @1 = @a = 5
+											-> @3 = 3 -----------> @5 = 3
+ */
+void copb(int a, int b){
+	int v = memory[b];
+	int w = memory[a];
+	memory[w] = v;
+}
+
 void jmf(int a, int b){
 	if(memory[a]!=1){
 		i_inst = b-1;
@@ -101,23 +127,23 @@ void operation(int inst_main){
 			printf("ADD\n");
 			addition(op_tab[i_inst][1], op_tab[i_inst][2], op_tab[i_inst][3]);
 		break;
-		case MUL : 
+		case MUL :
 			printf("MUL\n");
 			multiplication(op_tab[i_inst][1], op_tab[i_inst][2], op_tab[i_inst][3]);
 		break;
-		case SOU : 
+		case SOU :
 			printf("SOU\n");
 			soustraction(op_tab[i_inst][1], op_tab[i_inst][2], op_tab[i_inst][3]);
-		break; 
+		break;
 		case DIV :
 			printf("DIV\n");
 			division(op_tab[i_inst][1], op_tab[i_inst][2], op_tab[i_inst][3]);
 		break;
-		case INF : 
+		case INF :
 			printf("INF\n");
 			inferieur(op_tab[i_inst][1], op_tab[i_inst][2], op_tab[i_inst][3]);
 		break;
-		case SUP :  
+		case SUP :
 			printf("SUP\n");
 			superieur(op_tab[i_inst][1], op_tab[i_inst][2], op_tab[i_inst][3]);
 		break;
@@ -140,6 +166,14 @@ void operation(int inst_main){
 		case COP :
 			printf("COP\n");
 			copie(op_tab[i_inst][1], op_tab[i_inst][2]);
+		break;
+		case COPA :
+			printf("COPA\n");
+			copa(op_tab[i_inst][1], op_tab[i_inst][2]);
+		break;
+		case COPB :
+			printf("COPB\n");
+			copb(op_tab[i_inst][1], op_tab[i_inst][2]);
 		break;
 		case JMF :
 			printf("JMF\n");
@@ -167,29 +201,16 @@ void affiche_tab(){
 void affiche_memo(){
 	int i;
 	printf("memoire : \n");
-	for(i=0; i<10; i++){
+	for(i=0; i<15; i++){
 		printf("%d -> %d\n",i, memory[i]);
 	}
-	
+
 	printf("memoire temp : \n");
-	for(i=1000; i<1010; i++){
+	for(i=1000; i<1015; i++){
 		printf("%d -> %d\n",i, memory[i]);
 	}
 }
 /*
 int main (){
-	return 0;	
+	return 0;
 }*/
-
-
-
-
-
-
-
-
-
-
-
-
-
