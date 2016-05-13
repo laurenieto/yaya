@@ -31,5 +31,6 @@ void copa(int a , int b);
 void copb(int a , int b);
 void jmf(int a, int b);
 void jump(int a);
+void print(int a);
 
 #endif

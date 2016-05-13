@@ -57,7 +57,7 @@ Jmf : tJMF tNB tNB {op operateur = JMF; add(operateur,$2,$3,0);};
 
 Jmp : tJMP tNB {op operateur = JMP; add(operateur,$2,0,0);};
 
-Pri : tPRI tNB {printf("d \n",$2);};
+Pri : tPRI tNB {op operateur = PRI; add(operateur,$2,0,0);};
 
 Main : tMAIN tNB {val_main = $2;};
 

@@ -1,8 +1,12 @@
 int main(){
-  int * c = 1;
-  int b = 3;
-  int a = 4;
-  printf(a);
+  int * c;
+  int b = 1;
+  printf(b);
+  c = 15;
+    *c = 7;
+  b = *c + c;
+  printf(c);
+  printf(*c);
   printf(b);
 
 }

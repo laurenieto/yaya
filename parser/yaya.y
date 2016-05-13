@@ -81,7 +81,7 @@ Fonction: tINT tID tPO {profondeur ++; insertion_fun($2, ins_id); insertion_v((c
 			{add_ins(0x7, -1, -1, -1); set_addr_return($2, ins_id-1);};
 Main : tINT  tMAIN tPO {profondeur ++; insertion_fun("main", ins_id);} Params tPF Body;
 
-Appel_fn : tID tPO Params tPF tPV {int m = get_addr_fun($1); add_ins(0x7, m, -1, -1); int n = get_addr_return($2); ins[n][1] = ins_id;};
+Appel_fn : tID tPO Params tPF tPV {int m = get_addr_fun($1); add_ins(0x7, m, -1, -1); int n = get_addr_return($1); ins[n][1] = ins_id;};
 
 Params : 	tINT tID SuiteParams {insertion_v($2,profondeur,0); affichage_liste_var();}
 			|;
@@ -97,7 +97,7 @@ BodyFunction : tAO Instrs tAF { suppression_var_fn();
 						profondeur --;};
 
 Instrs : 	BlocAff Instrs
-			|BlocDecl  Instrs
+			|BlocDecl Instrs
 			|BlocPrintf Instrs
 			|BlocIf Instrs
 			|BlocWhile Instrs
@@ -117,7 +117,7 @@ BlocAff : tID Affectation tPV {
 								int m = get_address($1,profondeur);
 								add_ins(0x5, m, $2, -1);
 								init_var($1, profondeur);
-							};
+							}
 
 						| tFOIS tID Affectation tPV {
 														int m = get_address($2,profondeur);
@@ -171,8 +171,8 @@ BlocDecl : 	tINT tID suiteDecl tPV { 	insertion_v($2,profondeur,0);
 											init_var($2, profondeur);
 										}
 									}
-			|tCST tINT tID suiteDecl tPV { insertion_v($3,profondeur,1); };
-			|tINT tFOIS tID suiteDecl tPV { 	insertion_v($3,profondeur,0);
+			|tCST tINT tID suiteDecl tPV { insertion_v($3,profondeur,1); }
+			|tINT tFOIS tID suiteDecl tPV { 	 insertion_v($3,profondeur,0);
 													if($4!=-1){
 														int m = get_address($3,profondeur);
 														add_ins(0x10, m, $4, -1);
@@ -447,29 +447,23 @@ int main(void) {
 			strcat(str,"\n");
 			break;
 		case 15 :
-				strcat(str,"COPA ");
-				sprintf(itos, "%d", ins[i][1]);
-				strcat(str, itos);
-				strcat(str,"\n");
-				sprintf(itos, "%d", ins[i][2]);
-				strcat(str,itos);
-				strcat(str," ");
-				sprintf(itos, "%d", ins[i][3]);
-				strcat(str,itos);
-				strcat(str,"\n");
-				break;
-			case 16 :
-						strcat(str,"COPB ");
-						sprintf(itos, "%d", ins[i][1]);
-						strcat(str, itos);
-						strcat(str,"\n");
-						sprintf(itos, "%d", ins[i][2]);
-						strcat(str,itos);
-						strcat(str," ");
-						sprintf(itos, "%d", ins[i][3]);
-						strcat(str,itos);
-						strcat(str,"\n");
-						break;
+			strcat(str,"COPA ");
+			sprintf(itos, "%d", ins[i][1]);
+			strcat(str,itos);
+			strcat(str," ");
+			sprintf(itos, "%d", ins[i][2]);
+			strcat(str,itos);
+			strcat(str,"\n");
+			break;
+		case 16 :
+			strcat(str,"COPB ");
+			sprintf(itos, "%d", ins[i][1]);
+			strcat(str,itos);
+			strcat(str," ");
+			sprintf(itos, "%d", ins[i][2]);
+			strcat(str,itos);
+			strcat(str,"\n");
+			break;
 		default :
 			fprintf(stderr, "ERROR : code assembleur inconnu\n");
 	   		exit(-1);

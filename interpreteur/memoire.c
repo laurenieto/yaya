@@ -73,6 +73,10 @@ void copie(int a, int b){
 	memory[a] = memory[b];
 }
 
+void print(int a){
+	printf(" \n \n%d \n \n", memory[a]);
+}
+
 
 /* COPA 1 2 : on prend la valeur qu'il y a à l'adresse 2 (val_add_2),
  on regarde la valeur qu'il y a à l'adresse val_add_2 (val_add_val_add2)
@@ -183,6 +187,9 @@ void operation(int inst_main){
 			printf("JMP\n");
 			jump(op_tab[i_inst][1]);
 		break;
+		case PRI :
+			printf("PRI \n");
+			print(op_tab[i_inst][1]);
 		default :
 			printf("pas add \n");
 		}
